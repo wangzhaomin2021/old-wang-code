@@ -8,6 +8,9 @@ dependencies:
   mime-types:
     specifier: ^2.1.35
     version: 2.1.35
+  tiny-emitter:
+    specifier: ^2.1.0
+    version: 2.1.0
 
 packages:
 
@@ -21,4 +24,8 @@ packages:
     engines: {node: '>= 0.6'}
     dependencies:
       mime-db: 1.52.0
+    dev: false
+
+  /tiny-emitter@2.1.0:
+    resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==}
     dev: false

@@ -12,6 +12,7 @@
   "author": "wzm",
   "license": "ISC",
   "dependencies": {
-    "mime-types": "^2.1.35"
+    "mime-types": "^2.1.35",
+    "tiny-emitter": "^2.1.0"
   }
 }
