@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>圆形进度条-canvas版</title>
+    <link rel="stylesheet" href="../common.css" />
+    <style>
+      canvas {
+        display: block;
+        margin: 100px auto;
+        background-color: black;
+      }
+      .angle {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="cnv" width="600" height="400"></canvas>
+    <div class="angle">
+      进度：
+      <input id="ipt" type="number" min="0" max="100" step="1" value="30" />
+      动画速度：
+      <input id="rate" type="number" min="0" max="100" step="1" value="5" />
+    </div>
+
+    <script>
+      const ctx = cnv.getContext("2d");
+      const cnvWidth = cnv.width;
+      const cnvHeight = cnv.height;
+      const r = 160;
+      const center_x = cnvWidth / 2;
+      const center_y = cnvHeight / 2;
+      let timer = null;
+
+      const getAngle = () => {
+        return (Math.PI * 2 * Math.min(parseFloat(ipt.value) || 0, 100)) / 100;
+      };
+
+      const getRate = () => {
+        return Math.min(parseFloat(rate.value) || 0, 100) / 100;
+      };
+
+      // 绘制进度条
+      function drawProgress(ctx, r, startAngle, endAngle, color) {
+        ctx.clearRect(0, 0, cnvWidth, cnvHeight);
+        ctx.save();
+        ctx.translate(center_x, center_y);
+        ctx.rotate(-Math.PI / 2);
+        ctx.beginPath();
+        ctx.arc(0, 0, r, startAngle, endAngle, false);
+        ctx.lineWidth = 20;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function draw(ctx, r, startAngle, endAngle, color, rate) {
+        if (timer) cancelAnimationFrame(timer);
+        const angle = 0;
+
+        drawFrame(ctx, r, startAngle, endAngle, color, angle, rate);
+      }
+
+      function drawFrame(
+        ctx,
+        r_short,
+        startAngle,
+        endAngle,
+        color,
+        angle,
+        rate
+      ) {
+        timer = requestAnimationFrame(function () {
+          drawProgress(ctx, r, startAngle, angle, color);
+          if (angle === endAngle) {
+            cancelAnimationFrame(timer);
+            timer = null;
+            return;
+          }
+
+          if (angle + rate < endAngle) {
+            angle += rate;
+          } else {
+            angle = endAngle;
+          }
+
+          drawFrame(ctx, r, startAngle, endAngle, color, angle, rate);
+        });
+      }
+
+      draw(ctx, r, 0, getAngle(), "blue", getRate());
+
+      ipt.addEventListener("change", () => {
+        draw(ctx, r, 0, getAngle(), "blue", getRate());
+      });
+
+      rate.addEventListener("change", () => {
+        draw(ctx, r, 0, getAngle(), "blue", getRate());
+      });
+    </script>
+  </body>
+</html>
