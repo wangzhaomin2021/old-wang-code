@@ -60,6 +60,7 @@
       function draw(ctx, r, startAngle, endAngle, color, rate) {
         if (timer) cancelAnimationFrame(timer);
         const angle = 0;
+        if (endAngle === 0) return ctx.clearRect(0, 0, cnvWidth, cnvHeight);
 
         drawFrame(ctx, r, startAngle, endAngle, color, angle, rate);
       }
