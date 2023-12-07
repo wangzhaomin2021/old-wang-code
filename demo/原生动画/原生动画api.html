@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>原生动画api</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        & .opt {
+          margin-top: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <svg
+      t="1701919592014"
+      class="icon"
+      viewBox="0 0 1024 1024"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      p-id="4294"
+      width="200"
+      height="200"
+    >
+      <path
+        d="M575.852903 115.426402L661.092435 288.054362c10.130509 20.465674 29.675227 34.689317 52.289797 37.963825l190.433097 27.62866c56.996902 8.288598 79.7138 78.281203 38.475467 118.496253l-137.836314 134.35715c-16.372539 15.963226-23.84251 38.987109-19.954032 61.49935l32.540421 189.716799c9.721195 56.792245-49.833916 100.077146-100.793444 73.267113L545.870691 841.446188a69.491196 69.491196 0 0 0-64.67153 0l-170.376737 89.537324c-50.959528 26.810033-110.51464-16.474868-100.793444-73.267113L242.569401 667.9996c3.888478-22.512241-3.581493-45.536125-19.954032-61.49935L84.779055 472.245428c-41.238333-40.215049-18.521435-110.207655 38.475467-118.496252l190.433097-27.62866c22.61457-3.274508 42.159288-17.498151 52.289797-37.963826L451.319277 115.426402c25.479764-51.675827 99.053862-51.675827 124.533626 0z"
+        p-id="4295"
+      ></path>
+    </svg>
+
+    <div class="opt">
+      <button onclick="pause()">停止</button>
+      <button onclick="play()">继续</button>
+      <button onclick="finish()">终止</button>
+      <button onclick="cancel()">取消</button>
+    </div>
+    <script>
+      const keyframes = [
+        { fill: "red", transform: "scale(1) rotate(0deg)", offset: 0 },
+        { fill: "blue", transform: "scale(1.5) rotate(180deg)", offset: 0.5 },
+        { fill: "green", transform: "scale(2) rotate(360deg)", offset: 1 },
+      ];
+
+      const options = {
+        iterations: Infinity,
+        duration: 12000,
+        delay: 5000,
+        direction: "alternate",
+        fill: "both",
+      };
+
+      const svg = document.querySelector("svg");
+      const animation = svg.animate(keyframes, options);
+
+      function pause() {
+        animation.pause();
+      }
+
+      function play() {
+        animation.play();
+      }
+
+      function finish() {
+        // 无限动画调用会报错，不能取消无限动画
+        animation.finish();
+      }
+
+      function cancel() {
+        animation.cancel();
+      }
+
+      // 监听动画结束事件
+      animation.finished
+        .then(() => {
+          console.log("===> 动画结束");
+          svg.style.display = "none";
+        })
+        .catch((err) => {
+          console.log("===> cancel error:", err);
+        });
+    </script>
+  </body>
+</html>

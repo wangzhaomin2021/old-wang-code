@@ -65,15 +65,7 @@
         drawFrame(ctx, r, startAngle, endAngle, color, angle, rate);
       }
 
-      function drawFrame(
-        ctx,
-        r_short,
-        startAngle,
-        endAngle,
-        color,
-        angle,
-        rate
-      ) {
+      function drawFrame(ctx, r, startAngle, endAngle, color, angle, rate) {
         timer = requestAnimationFrame(function () {
           drawProgress(ctx, r, startAngle, angle, color);
           if (angle === endAngle) {
