@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>animation example</title>
+
+    <style>
+      .example-item {
+        width: 300px;
+        height: 200px;
+        border: 2px solid green;
+        font-size: 30px;
+        margin-bottom: 100px;
+        overflow: hidden;
+        resize: both;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="example-item"><div class="inner-box"></div></div>
+    <textarea name="" id="txt" cols="30" rows="10">
+        锄禾日当午
+        汗滴禾下土
+        谁知盘中餐
+        粒粒皆辛苦
+    </textarea>
+
+    <script type="module">
+      import anime from "./animejs.js";
+
+      const box = document.querySelector(".inner-box");
+      const outBox = document.querySelector(".example-item");
+      let animation = null;
+      const speed = 128;
+
+      syncTxt();
+
+      txt.addEventListener("input", function () {
+        syncTxt();
+      });
+
+      function syncTxt() {
+        const str = txt.value;
+        const arr = str
+          .split("\n")
+          .filter((line) => !!line.trim())
+          .map((line) => `${line}<br />`);
+        box.innerHTML = arr.join("");
+        if (detectOverflow(outBox)) {
+          // 穿梭滚动
+          runOver();
+
+          // 来回滚动
+          // runBack();
+        } else {
+          stopAnimate();
+        }
+      }
+
+      const observe = new ResizeObserver((entries) => {
+        entries.forEach((entry) => {
+          if (detectOverflow(outBox)) {
+            // 穿梭滚动;
+            runOver();
+
+            // 来回滚动
+            // runBack();
+          } else {
+            stopAnimate();
+          }
+        });
+      });
+
+      observe.observe(outBox);
+      // observe.observe(box);
+
+      function detectOverflow(el) {
+        const { clientHeight } = el;
+        const { clientHeight: childClentHeight } = el.firstElementChild;
+        return childClentHeight > clientHeight;
+      }
+
+      function animate(opt) {
+        animation?.remove(box); // 先移除之前添加的动画
+        animation = anime(opt);
+      }
+
+      function stopAnimate() {
+        if (animation) {
+          animation.pause();
+          animation.set(box, { translateY: 0 });
+          animation.remove(box);
+          animation = null;
+        }
+      }
+
+      function runOver() {
+        const offsetY0 = outBox.clientHeight;
+        const offsetY1 = -box.clientHeight;
+        const duration = (Math.abs(offsetY0 - offsetY1) / speed) * 1000; // s
+        animate({
+          targets: box,
+          translateY: [offsetY0, offsetY1],
+          duration: duration,
+          easing: "linear",
+          loop: true,
+        });
+      }
+
+      function runBack() {
+        const offsetY0 = 0;
+        const offsetY1 = -box.clientHeight + outBox.clientHeight;
+        const duration = (Math.abs(offsetY0 - offsetY1) / speed) * 3000; // s
+        animate({
+          targets: box,
+          translateY: [offsetY0, offsetY1],
+          easing: "easeInOutCubic",
+          duration: duration,
+          direction: "alternate",
+          loop: true,
+        });
+      }
+    </script>
+  </body>
+</html>
